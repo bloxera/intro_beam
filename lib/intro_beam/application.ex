@@ -13,9 +13,10 @@ defmodule IntroBeam.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: IntroBeam.PubSub},
       # Start the Endpoint (http/https)
-      IntroBeamWeb.Endpoint
+      IntroBeamWeb.Endpoint,
       # Start a worker by calling: IntroBeam.Worker.start_link(arg)
       # {IntroBeam.Worker, arg}
+      IntroBeam.WorkerProcs.Supervisor
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

@@ -8,8 +8,7 @@ config :intro_beam, IntroBeamWeb.Endpoint,
   server: false
 
 # In test we don't send emails.
-config :intro_beam, IntroBeam.Mailer,
-  adapter: Swoosh.Adapters.Test
+config :intro_beam, IntroBeam.Mailer, adapter: Swoosh.Adapters.Test
 
 # Print only warnings and errors during test
 config :logger, level: :warn
