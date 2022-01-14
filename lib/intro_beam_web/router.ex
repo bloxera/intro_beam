@@ -18,6 +18,9 @@ defmodule IntroBeamWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+
+    live "/monitor", MonitorLive
+    live "/user", UserLive
   end
 
   # Other scopes may use custom stacks.
