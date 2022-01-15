@@ -18,7 +18,6 @@ defmodule IntroBeam.WorkerProcs.Server do
     {:ok, {0, 0, 0}}
   end
 
-
   # start counting received responses every second from 0
   @impl true
   def handle_info(:reset, {ctr, _last, cur} = _state) do
@@ -38,5 +37,4 @@ defmodule IntroBeam.WorkerProcs.Server do
   def handle_call(:get_num_completed, _from, {ctr, last, _cur} = state) do
     {:reply, {ctr, last}, state}
   end
-
 end
