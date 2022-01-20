@@ -9,11 +9,6 @@ defmodule IntroBeam.WorkerProcs.Server do
 
   @impl true
   def init(_state) do
-    # start 10.000 worker processes
-    for _n <- 1..10000 do
-      IntroBeam.WorkerProcs.WorkerSupervisor.start_child()
-    end
-
     Process.send_after(self(), :reset, 1000)
     {:ok, {0, 0, 0}}
   end
@@ -22,14 +17,13 @@ defmodule IntroBeam.WorkerProcs.Server do
   @impl true
   def handle_info(:reset, {ctr, _last, cur} = _state) do
     Process.send_after(self(), :reset, 1000)
-    IO.puts("counter: #{ctr}, responses: #{cur}")
     {:noreply, {ctr + 1, cur, 0}}
   end
 
   # a worker process notifies the completion of a work package
   @impl true
-  def handle_info(:work_completed, {ctr, last, cur} = _state) do
-    {:noreply, {ctr, last, cur + 1}}
+  def handle_info({:work_completed, num}, {ctr, last, cur} = _state) do
+    {:noreply, {ctr, last, cur + num}}
   end
 
   # external request to server to get the number of completes requests during last second

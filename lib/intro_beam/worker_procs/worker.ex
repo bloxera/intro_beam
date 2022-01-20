@@ -10,16 +10,15 @@ defmodule IntroBeam.WorkerProcs.Worker do
   @impl true
   def init(_state) do
     Process.send_after(self(), :work, 1000)
-    {:ok, %{}}
+    {:ok, 0}
   end
 
   # handle every second a work package
   @impl true
   def handle_info(:work, state) do
     Process.send_after(self(), :work, 1000)
-    _sum = Enum.reduce(1..100, 0, fn i, acc -> i + acc end)
-    Process.send(:WorkerServer, :work_completed, [])
-
-    {:noreply, state}
+    _sum = Enum.reduce(1..10, 0, fn i, acc -> i + acc end)
+    Process.send(:WorkerServer, {:work_completed, state + 1}, [])
+    {:noreply, 0}
   end
 end

@@ -37,7 +37,14 @@ defmodule IntroBeamWeb.UserLive do
     val = String.to_integer(value)
     from = self()
     {pid, _ref} = Process.spawn(fn -> calculate(from, val) end, [:monitor])
-    user_tasks = Map.put(socket.assigns.user_tasks, pid, {value, "<span style=\"color: blue;\"> <b>Berechnung läuft noch...</b> </span>"})
+
+    user_tasks =
+      Map.put(
+        socket.assigns.user_tasks,
+        pid,
+        {value, "<span style=\"color: blue;\"> <b>Berechnung läuft noch...</b> </span>"}
+      )
+
     {:noreply, assign(socket, :user_tasks, user_tasks)}
   end
 
@@ -65,7 +72,12 @@ defmodule IntroBeamWeb.UserLive do
     user_tasks =
       if values = Map.get(user_tasks, worker_pid) do
         {task, _} = values
-        Map.put(user_tasks, worker_pid, {task, "<span style=\"color: red;\"> ==> FEHLER (Prozess gecrashed) </span>"})
+
+        Map.put(
+          user_tasks,
+          worker_pid,
+          {task, "<span style=\"color: red;\">FEHLER (kein Ergebnis)</span>"}
+        )
       else
         user_tasks
       end
@@ -79,6 +91,6 @@ defmodule IntroBeamWeb.UserLive do
     if x == 13, do: div(13, 0)
     res = Enum.reduce(1..x, 0, fn x, acc -> acc + x end)
     Process.send(from, {:user_task_update, self(), res}, [])
-    Process.send(:WorkerServer, :work_completed, [])
+    Process.send(:WorkerServer, {:work_completed, 1}, [])
   end
 end

@@ -4,15 +4,24 @@ defmodule IntroBeamWeb.MonitorLive do
   def render(assigns) do
     ~H"""
     <h1>Activity Monitor</h1>
+
+    <.form let={f} for={:entry_form} phx-submit="start">
+      <%= label f, :value, "Anzahl Worker:" %>
+      <%= text_input f, :value, autocomplete: "off" %>
+
+      <%= submit "Worker starten" %>
+    </.form>
+
+
     <p>Abgeschlossene Worker-Tasks pro Sekunde:</p>
     <%= Enum.map(@activity, fn {time, value} -> %>
       <%= if time > 0 do %>
         <div style="display: flex;">
           <span>
-            <%= time |>  Integer.to_string() |> String.pad_leading(3, "0") %> sec.:
+            <%= time |>  Integer.to_string() |> String.pad_leading(3, "0") %> sec.: &nbsp; &nbsp;
             <%= value |> Integer.to_string() |> String.pad_leading(5, "0") %> &nbsp; &nbsp;
           </span>
-          <div style={ "background: grey; color: silver;  height:24px; width:#{ round(80 / @max_value * (value + (value - @max_value) * 5)) }%;"}> </div>
+          <div style={ "background: grey; color: silver;  opacity:#{(80 + rem(time, 3) * 10) / 100}; height:24px; width:#{ round(70 / @max_value * value) }%;"}> </div>
         </div>
       <% end %>
     <% end) %>
@@ -30,6 +39,16 @@ defmodule IntroBeamWeb.MonitorLive do
       |> assign(:max_value, 1)
 
     {:ok, socket}
+  end
+
+  def handle_event("start", %{"entry_form" => %{"value" => value}}, socket) do
+    val = String.to_integer(value)
+
+    for _n <- 1..val do
+      IntroBeam.WorkerProcs.WorkerSupervisor.start_child()
+    end
+
+    {:noreply, socket}
   end
 
   def handle_info(:update, socket) do
