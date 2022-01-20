@@ -9,10 +9,10 @@ defmodule IntroBeamWeb.UserLive do
 
   def render(assigns) do
     ~H"""
-    Summe = 1 + 2 + 3 + ... + x<br>
+    Σ 1..n = 1 + 2 + 3 + ... + n<br>
     <br>
     <.form let={f} for={:entry_form} phx-submit="calculate">
-      <%= label f, :value, "x:" %>
+      <%= label f, :value, "Eingabe für n:" %>
       <%= text_input f, :value, autocomplete: "off" %>
 
       <%= submit "berechnen" %>
@@ -21,8 +21,8 @@ defmodule IntroBeamWeb.UserLive do
     <%= Map.values(@user_tasks)
         |> Enum.map(fn {task, result} -> %>
              <div>
-               <div style="width: 100px; display:inline-block;"> <%= task  %></div>
-               <div style="display:inline-block;"> &nbsp; : &nbsp; <%= raw(result) %>
+               <div style="width: 150px; display:inline-block;">Σ 1..<%= task  %></div>
+               <div style="display:inline-block;"> &nbsp; = &nbsp; <%= raw(result) %>
              </div>
     <% end) %>
     """
@@ -76,7 +76,7 @@ defmodule IntroBeamWeb.UserLive do
         Map.put(
           user_tasks,
           worker_pid,
-          {task, "<span style=\"color: red;\">FEHLER (kein Ergebnis)</span>"}
+          {task, "<span style=\"color: red;\">FEHLER (Runtime Exception)</span>"}
         )
       else
         user_tasks
@@ -90,6 +90,7 @@ defmodule IntroBeamWeb.UserLive do
   defp calculate(from, x) do
     if x == 13, do: div(13, 0)
     res = Enum.reduce(1..x, 0, fn x, acc -> acc + x end)
+    # res = div((1 + x) , 2)
     Process.send(from, {:user_task_update, self(), res}, [])
     Process.send(:WorkerServer, {:work_completed, 1}, [])
   end

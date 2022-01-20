@@ -28,7 +28,7 @@ defmodule IntroBeamWeb.MonitorLive do
       <% end %>
     <% end) %>
     <br>
-    Scheduler-Auslastung:
+    Scheduler-Auslastung (<%= :erlang.system_info(:schedulers_online) %> Scheduler aktiv):
     <%= Enum.map(@activity, fn {time, _value, load} -> %>
       <%= if time > 0 do %>
         <div style="display: flex;">
@@ -37,7 +37,7 @@ defmodule IntroBeamWeb.MonitorLive do
             <%= round(load * 100) |> Integer.to_string() |> String.pad_leading(3, "0") %>%  &nbsp; &nbsp;
           </span>
 
-          <div style={ "background:#{ if load < 1.0, do: :green, else: :red}; color: silver;  opacity:#{(80 + rem(time, 3) * 10) / 100}; height:24px; width:#{ round(min(load*100, 100) * 0.7) }%;"}> </div>
+          <div style={ "background:#{ if load <= 1.00, do: :green, else: :red}; color: silver;  opacity:#{(80 + rem(time, 3) * 10) / 100}; height:24px; width:#{ round(min(load*100, 100) * 0.7) }%;"}> </div>
         </div>
       <% else %>
           <br>
