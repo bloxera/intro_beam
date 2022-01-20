@@ -16,6 +16,7 @@ defmodule IntroBeam.Application do
       IntroBeamWeb.Endpoint,
       # Start a worker by calling: IntroBeam.Worker.start_link(arg)
       # {IntroBeam.Worker, arg}
+      IntroBeam.Load.Scheduler,
       IntroBeam.WorkerProcs.Supervisor
     ]
 
