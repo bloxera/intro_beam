@@ -87,11 +87,10 @@ defmodule IntroBeamWeb.UserLive do
 
   # c "lib/intro_beam_web/live/user_live.ex"
 
-  defp calculate(from, x) do
-    if x == 13, do: div(13, 0)
-    res = Enum.reduce(1..x, 0, fn x, acc -> acc + x end)
-    # res = div((1 + x) , 2)
+  defp calculate(from, n) do
+    if n == 13, do: div(13, 0)
+    res = Enum.reduce(1..n, 0, fn n, acc -> acc + n end)
+    # res = div((1 + n) , 2)
     Process.send(from, {:user_task_update, self(), res}, [])
-    Process.send(:WorkerServer, {:work_completed, 1}, [])
   end
 end
