@@ -90,7 +90,7 @@ defmodule IntroBeamWeb.UserLive do
   defp calculate(from, n) do
     if n == 13, do: div(13, 0)
     res = Enum.reduce(1..n, 0, fn n, acc -> acc + n end)
-    # res = div((1 + n) , 2)
+    # res = div((1 + n), 2)
     Process.send(from, {:user_task_update, self(), res}, [])
   end
 end
